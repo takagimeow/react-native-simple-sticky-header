@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   StatusBar,
   SafeAreaView,
@@ -6,6 +6,7 @@ import {
   Dimensions,
   RefreshControl,
   Platform,
+  View,
 } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { StickyHeader } from './StickyHeader';
@@ -13,10 +14,8 @@ import { TopHeader } from './TopHeader';
 
 export interface IStickyHeaderScrollView {
   children: React.ReactElement;
-  top: () => React.ReactElement;
-  bottom: () => React.ReactElement;
-  topHeight: number;
-  bottomHeight: number;
+  top: (ref: React.LegacyRef<View>) => React.ReactElement;
+  bottom: (ref: React.LegacyRef<View>) => React.ReactElement;
   statusBarBackground?: string;
   headerBackground?: string;
   scrollViewBackground?: string;
@@ -28,39 +27,91 @@ export function StickyHeaderScrollView({
   children,
   top,
   bottom,
-  topHeight = 64,
-  bottomHeight = 64,
   statusBarBackground = '#C4C4C4',
   headerBackground = '#ffffff',
   scrollViewBackground = '#ffffff',
   refreshing = false,
   onRefresh,
 }: IStickyHeaderScrollView) {
+  const [topHeight, setTopHeight] = useState(0);
+  const [bottomHeight, setBottomHeight] = useState(0);
+  const headerComponentRef = useRef(null);
+  const topComponentRef = useRef(null);
+  const bottomComponentRef = useRef(null);
   const scrollViewRef = useRef(new Animated.Value(0));
   const scrollY = useRef(new Animated.Value(0)).current;
-  // scrollYが >= 0になることを保証
-  const clampedScrollY = scrollY.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-    extrapolateLeft: 'clamp',
-  });
+  const translateYRef = useRef(new Animated.Value(0));
+  const opacityRef = useRef(new Animated.Value(0));
+
   const [statusBarHeight] = useState(getStatusBarHeight());
-  const topTranslateRef = useRef(
-    Animated.diffClamp(Animated.multiply(clampedScrollY, -1), -topHeight, 0),
-  );
-  const bottomTranslateRef = useRef(
-    Animated.diffClamp(Animated.multiply(clampedScrollY, -1), -bottomHeight, 0),
-  );
-  // 下段ヘッダーが一番上の位置に来た時に
-  //（初期位置からbottomHeight分引かれた位置。この時点で上段ヘッダーは画面外に消えている）、
-  // 上段ヘッダーのopacityは0になる。
-  // 下段ヘッダーが初期位置に移動するにつれて、上段ヘッダーのopacityが1に戻る
-  const topOpacity = bottomTranslateRef.current.interpolate({
-    inputRange: [-bottomHeight, -(bottomHeight - 1)],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  });
-  const [headerHeight] = useState(topHeight + bottomHeight + statusBarHeight);
+  const [headerHeight, setHeaderHeight] = useState(topHeight + bottomHeight + statusBarHeight);
+  const [paddingTop, setPaddingTop] = useState(0);
+  const lastTimeOffsetRef = useRef(0);
+  const animatingRef = useRef(false);
+  useEffect(() => {
+    const newHeaderHeight =
+      Platform.OS === 'android'
+        ? topHeight + bottomHeight + statusBarHeight
+        : topHeight + bottomHeight;
+    const paddingTop =
+      Platform.OS === 'android'
+        ? topHeight !== bottomHeight
+          ? newHeaderHeight + Math.abs(topHeight - bottomHeight)
+          : newHeaderHeight
+        : 0;
+    setHeaderHeight(newHeaderHeight);
+    setPaddingTop(paddingTop);
+  }, [topHeight, headerHeight, scrollViewRef]);
+
+  useEffect(() => {
+    scrollY.addListener(event => {
+      if (animatingRef.current) {
+        return;
+      }
+      if (
+        event.value <= 0 ||
+        (event.value <= lastTimeOffsetRef.current &&
+          event.value < Dimensions.get('screen').height / 2)
+      ) {
+        // 点灯
+        Animated.parallel([
+          Animated.timing(translateYRef.current, {
+            toValue: 0,
+            duration: 160,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacityRef.current, {
+            toValue: 1,
+            duration: 160,
+            useNativeDriver: true,
+          }),
+        ]).start(({ finished }) => {
+          animatingRef.current = !finished;
+        });
+      } else {
+        // 消灯
+        Animated.parallel([
+          Animated.timing(translateYRef.current, {
+            toValue: -topHeight,
+            duration: 160,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacityRef.current, {
+            toValue: 0,
+            duration: 160,
+            useNativeDriver: true,
+          }),
+        ]).start(({ finished }) => {
+          animatingRef.current = !finished;
+        });
+      }
+      lastTimeOffsetRef.current = event.value;
+    });
+
+    return () => {
+      scrollY.removeAllListeners();
+    };
+  }, [topHeight, headerHeight, headerComponentRef]);
 
   return (
     <>
@@ -110,12 +161,7 @@ export function StickyHeaderScrollView({
                 : 0,
           }}
           contentContainerStyle={{
-            paddingTop:
-              Platform.OS === 'android'
-                ? topHeight !== bottomHeight
-                  ? headerHeight + Math.abs(topHeight - bottomHeight)
-                  : headerHeight
-                : 0,
+            paddingTop,
           }}
           automaticallyAdjustContentInsets={false}
           contentInsetAdjustmentBehavior="automatic"
@@ -132,28 +178,39 @@ export function StickyHeaderScrollView({
         </Animated.ScrollView>
       </SafeAreaView>
       <Animated.View
-        style={{
-          position: 'absolute',
-          top: statusBarHeight,
-          width: Dimensions.get('window').width,
-          backgroundColor: headerBackground,
-          transform: [
-            {
-              translateY: topTranslateRef.current,
-            },
-          ],
-        }}
+        ref={headerComponentRef}
+        style={[
+          {
+            position: 'absolute',
+            top: statusBarHeight,
+            width: Dimensions.get('screen').width,
+            backgroundColor: headerBackground,
+            transform: [
+              {
+                translateY: translateYRef.current,
+              },
+            ],
+          },
+        ]}
       >
-        <TopHeader opacity={topOpacity} style={{ height: topHeight }}>
-          {top()}
-        </TopHeader>
-        <StickyHeader
-          style={{
-            height: bottomHeight,
+        <View
+          onLayout={event => {
+            const height = event.nativeEvent.layout.height;
+            setTopHeight(height);
           }}
         >
-          {bottom()}
-        </StickyHeader>
+          <TopHeader opacity={opacityRef.current}>
+            <View>{top(topComponentRef)}</View>
+          </TopHeader>
+        </View>
+        <View
+          onLayout={event => {
+            const height = event.nativeEvent.layout.height;
+            setBottomHeight(height);
+          }}
+        >
+          <StickyHeader>{bottom(bottomComponentRef)}</StickyHeader>
+        </View>
       </Animated.View>
       <StatusBar backgroundColor={statusBarBackground} translucent={true} />
     </>

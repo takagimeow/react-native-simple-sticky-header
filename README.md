@@ -132,10 +132,6 @@ export default function App() {
 
 ---
 
-#### topHeight
-
-#### bottomHeight
-
 #### statusBarBackground
 
 #### headerBackground
