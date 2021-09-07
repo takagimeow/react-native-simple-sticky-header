@@ -1,5 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { StatusBar, SafeAreaView, Animated, Dimensions, RefreshControl } from 'react-native';
+import {
+  StatusBar,
+  SafeAreaView,
+  Animated,
+  Dimensions,
+  RefreshControl,
+  Platform,
+} from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { StickyHeader } from './StickyHeader';
 import { TopHeader } from './TopHeader';
@@ -31,27 +38,18 @@ export function StickyHeaderScrollView({
 }: IStickyHeaderScrollView) {
   const scrollViewRef = useRef(new Animated.Value(0));
   const scrollY = useRef(new Animated.Value(0)).current;
+  // scrollYが >= 0になることを保証
+  const clampedScrollY = scrollY.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 1],
+    extrapolateLeft: 'clamp',
+  });
   const [statusBarHeight] = useState(getStatusBarHeight());
-  /**
-   * interpolateを指定する理由。
-   * 速い速度で上にスクロールするとscrollYの値がマイナスの値になる。この場合画面上では、本来ならtop:0だが、ヘッダーが少し上にはみ出る形になってしまう。
-   * それに伴ってtopTranslateもbottomTranslateもマイナスの値になってしまう。理由はわからず
-   * なのでその不具合を埋めるためにdiffClampの結果が-7の場合でも0に収束するようにinterpolateを使うようにした
-   *
-   */
   const topTranslateRef = useRef(
-    Animated.diffClamp(Animated.multiply(scrollY, -1), -topHeight, 0).interpolate({
-      inputRange: [-64, -7, 0],
-      outputRange: [-64, 0, 0],
-      extrapolate: 'clamp',
-    }),
+    Animated.diffClamp(Animated.multiply(clampedScrollY, -1), -topHeight, 0),
   );
   const bottomTranslateRef = useRef(
-    Animated.diffClamp(Animated.multiply(scrollY, -1), -bottomHeight, 0).interpolate({
-      inputRange: [-64, -7, 0],
-      outputRange: [-64, 0, 0],
-      extrapolate: 'clamp',
-    }),
+    Animated.diffClamp(Animated.multiply(clampedScrollY, -1), -bottomHeight, 0),
   );
   // 下段ヘッダーが一番上の位置に来た時に
   //（初期位置からbottomHeight分引かれた位置。この時点で上段ヘッダーは画面外に消えている）、
@@ -93,17 +91,39 @@ export function StickyHeaderScrollView({
             ],
             { useNativeDriver: true },
           )}
-          scrollEventThrottle={1}
+          scrollEventThrottle={16}
+          contentInset={{
+            top:
+              Platform.OS === 'ios'
+                ? topHeight !== bottomHeight
+                  ? headerHeight + Math.abs(topHeight - bottomHeight)
+                  : headerHeight
+                : 0,
+          }}
+          contentOffset={{
+            x: 0,
+            y:
+              Platform.OS === 'ios'
+                ? topHeight !== bottomHeight
+                  ? -(headerHeight + Math.abs(topHeight - bottomHeight))
+                  : -headerHeight
+                : 0,
+          }}
+          contentContainerStyle={{
+            paddingTop:
+              Platform.OS === 'android'
+                ? topHeight !== bottomHeight
+                  ? headerHeight + Math.abs(topHeight - bottomHeight)
+                  : headerHeight
+                : 0,
+          }}
+          automaticallyAdjustContentInsets={false}
           contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
           <Animated.View
             style={{
-              paddingTop:
-                topHeight !== bottomHeight
-                  ? headerHeight + Math.abs(topHeight - bottomHeight)
-                  : headerHeight,
               backgroundColor: 'transparent',
             }}
           >

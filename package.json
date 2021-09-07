@@ -25,10 +25,10 @@
     "ios"
   ],
   "author": "Keisuke Takagi",
-  "homepage": "",
+  "homepage": "https://github.com/takagimeow/react-native-simple-sticky-header#readme",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/takagimeow/react-native-simple-sticky-header"
   },
   "license": "MIT",
   "lint-staged": {
