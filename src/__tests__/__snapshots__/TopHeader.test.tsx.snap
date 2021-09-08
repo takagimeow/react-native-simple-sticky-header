@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TopHeader Snapshot Test 1`] = `
+<View
+  collapsable={false}
+  nativeID="animatedComponent"
+  onLayout={[MockFunction]}
+  style={Object {}}
+>
+  <View
+    collapsable={false}
+    nativeID="animatedComponent"
+    style={
+      Object {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "opacity": 1,
+        "width": "100%",
+      }
+    }
+  >
+    <View>
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "height": 64,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "display": "flex",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+            }
+          }
+        >
+          <View
+            accessible={true}
+            collapsable={false}
+            focusable={false}
+            nativeID="animatedComponent"
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#333333",
+                  "borderRadius": 25,
+                  "marginHorizontal": 4,
+                  "paddingHorizontal": 16,
+                  "paddingVertical": 12,
+                  "width": 116,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#ffffff",
+                    "textAlign": "center",
+                    "textAlignVertical": "center",
+                  }
+                }
+              >
+                配達
+              </Text>
+            </View>
+          </View>
+          <View
+            accessible={true}
+            collapsable={false}
+            focusable={false}
+            nativeID="animatedComponent"
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#ffffff",
+                  "borderRadius": 25,
+                  "marginHorizontal": 4,
+                  "paddingHorizontal": 16,
+                  "paddingVertical": 12,
+                  "width": 116,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#333333",
+                    "textAlign": "center",
+                    "textAlignVertical": "center",
+                  }
+                }
+              >
+                お持ち帰り
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

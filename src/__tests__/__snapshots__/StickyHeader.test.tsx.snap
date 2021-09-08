@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StickyHeader Snapshot Test 1`] = `
+<View
+  collapsable={false}
+  nativeID="animatedComponent"
+  onLayout={[MockFunction]}
+  style={Object {}}
+>
+  <View
+    collapsable={false}
+    nativeID="animatedComponent"
+    style={
+      Object {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "flexDirection": "row",
+          "height": 64,
+          "justifyContent": "space-around",
+          "width": "100%",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "height": 16,
+            "marginTop": 2,
+            "width": 16,
+          }
+        }
+      />
+      <View>
+        <View
+          accessible={true}
+          collapsable={false}
+          focusable={false}
+          nativeID="animatedComponent"
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "opacity": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "fontSize": 16,
+              }
+            }
+          >
+            今すぐ・東京都千代田区1丁目1番地
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          Object {
+            "marginTop": 2,
+          }
+        }
+      >
+        <View
+          accessible={true}
+          collapsable={false}
+          focusable={false}
+          nativeID="animatedComponent"
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "opacity": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "fontSize": 16,
+              }
+            }
+          >
+            👾
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

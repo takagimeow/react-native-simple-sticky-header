@@ -6,7 +6,7 @@ module.exports = {
     '<rootDir>/src',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(@react-native|react-native)/)',
+    'node_modules/(?!(@react-native|react-native|react-native-status-bar-height)/)',
   ],
   testMatch: [
     '**/?(*.)+(spec|test).+(ts|tsx|js)',
