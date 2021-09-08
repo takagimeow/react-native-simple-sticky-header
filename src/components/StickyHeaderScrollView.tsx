@@ -68,9 +68,6 @@ export function StickyHeaderScrollView({
       if (animatingRef.current) {
         return;
       }
-      console.log('event.value: ', event.value);
-      console.log('lastTimeOffsetRef.current: ', lastTimeOffsetRef.current);
-      console.log('\n\n\n');
       if (
         event.value <= 0 ||
         (event.value <= lastTimeOffsetRef.current && event.value < Dimensions.get('screen').height)
