@@ -70,8 +70,7 @@ export function StickyHeaderScrollView({
       }
       if (
         event.value <= 0 ||
-        (event.value <= lastTimeOffsetRef.current &&
-          event.value < Dimensions.get('screen').height / 2)
+        (event.value <= lastTimeOffsetRef.current && event.value < Dimensions.get('screen').height)
       ) {
         // 点灯
         Animated.parallel([
@@ -193,24 +192,23 @@ export function StickyHeaderScrollView({
           },
         ]}
       >
-        <View
+        <TopHeader
+          opacity={opacityRef.current}
           onLayout={event => {
             const height = event.nativeEvent.layout.height;
             setTopHeight(height);
           }}
         >
-          <TopHeader opacity={opacityRef.current}>
-            <View>{top(topComponentRef)}</View>
-          </TopHeader>
-        </View>
-        <View
+          <View>{top(topComponentRef)}</View>
+        </TopHeader>
+        <StickyHeader
           onLayout={event => {
             const height = event.nativeEvent.layout.height;
             setBottomHeight(height);
           }}
         >
-          <StickyHeader>{bottom(bottomComponentRef)}</StickyHeader>
-        </View>
+          {bottom(bottomComponentRef)}
+        </StickyHeader>
       </Animated.View>
       <StatusBar backgroundColor={statusBarBackground} translucent={true} />
     </>
