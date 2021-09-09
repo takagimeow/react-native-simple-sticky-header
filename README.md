@@ -1,5 +1,11 @@
 # react-native-simple-sticky-header
 
+This is the simplest sticky header component made for ReactNative.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/66447334/132624539-87cf437e-992e-4a02-8d8c-b4e0dd0ebf79.gif" height="542" alt="Simple" />
+</p>
+
 ## Installation
 
 ```bash
@@ -15,7 +21,6 @@ yarn add react-native-simple-sticky-header
 Here is a quick example.
 
 ```tsx
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -117,7 +122,6 @@ export default function App() {
     >
       <View style={styles.container}>
         <Text>Open up App.tsx to start working on your app!</Text>
-        <StatusBar style="auto" />
       </View>
     </StickyHeaderScrollView>
   );
@@ -126,26 +130,46 @@ export default function App() {
 
 ## Props and methods
 
----
-
 ### Props
 
----
+#### children (Required)
 
-#### statusBarBackground
+Type: React.ReactElement
+
+Contents to be displayed on the screen.
 
 #### headerBackground
 
+Type: string
+
+Header background color.
+
 #### scrollViewBackground
+
+Type: String
+
+Background color of the drawing area.
 
 #### refreshing
 
-### Methods
+Type: Boolean
 
----
+Flag indicating whether the content is being updated.
 
-#### top
+#### top (Required)
 
-#### bottom
+Type: (ref: React.LegacyRef<View>) => React.ReactElement
+
+Function which return a header component that disappears when scrolled.
+
+#### bottom (Required)
+
+Type: (ref: React.LegacyRef<View>) => React.ReactElement
+
+Function which return a header component that does not disappear when scrolled.
 
 #### onRefresh
+
+Type: () => void
+
+Function to be called on update.
