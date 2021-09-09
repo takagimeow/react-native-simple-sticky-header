@@ -16,7 +16,6 @@ export interface IStickyHeaderScrollView {
   children: React.ReactElement;
   top: (ref: React.LegacyRef<View>) => React.ReactElement;
   bottom: (ref: React.LegacyRef<View>) => React.ReactElement;
-  statusBarBackground?: string;
   headerBackground?: string;
   scrollViewBackground?: string;
   refreshing?: boolean;
@@ -27,7 +26,6 @@ export function StickyHeaderScrollView({
   children,
   top,
   bottom,
-  statusBarBackground = '#C4C4C4',
   headerBackground = '#ffffff',
   scrollViewBackground = '#ffffff',
   refreshing = false,
@@ -177,6 +175,22 @@ export function StickyHeaderScrollView({
         </Animated.ScrollView>
       </SafeAreaView>
       <Animated.View
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            width: Dimensions.get('screen').width,
+            height: topHeight,
+            backgroundColor: headerBackground,
+            transform: [
+              {
+                translateY: translateYRef.current,
+              },
+            ],
+          },
+        ]}
+      />
+      <Animated.View
         ref={headerComponentRef}
         style={[
           {
@@ -210,7 +224,7 @@ export function StickyHeaderScrollView({
           {bottom(bottomComponentRef)}
         </StickyHeader>
       </Animated.View>
-      <StatusBar backgroundColor={statusBarBackground} translucent={true} />
+      <StatusBar translucent={true} />
     </>
   );
 }
