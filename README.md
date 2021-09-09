@@ -128,7 +128,7 @@ export default function App() {
 
 ### Props
 
-#### children
+#### children (Required)
 
 Type: React.ReactElement
 
