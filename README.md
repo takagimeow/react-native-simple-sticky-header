@@ -2,6 +2,10 @@
 
 This is the simplest sticky header component made for ReactNative.
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/66447334/132624539-87cf437e-992e-4a02-8d8c-b4e0dd0ebf79.gif" height="542" alt="Simple" />
+</p>
+
 ## Installation
 
 ```bash
