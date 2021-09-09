@@ -1,6 +1,6 @@
 {
   "name": "react-native-simple-sticky-header",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "This is the simplest sticky header component made for ReactNative.",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
